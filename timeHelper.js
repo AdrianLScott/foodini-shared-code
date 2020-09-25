@@ -1,4 +1,4 @@
-import moment from "moment"; //RETURN OBJECT AT THE END
+const moment = require("moment"); //RETURN OBJECT AT THE END
 
 //document.getElementById("root").innerHTML = JSON.stringify(schdle);
 export function isOpen(schdle) {

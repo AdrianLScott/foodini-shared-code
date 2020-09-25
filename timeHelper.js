@@ -1,7 +1,7 @@
 const moment = require("moment"); //RETURN OBJECT AT THE END
 
 //document.getElementById("root").innerHTML = JSON.stringify(schdle);
-export function isOpen(schdle) {
+module.exports.isOpen = function isOpen(schdle) {
   let restInfo = {};
   let todayIndex = moment().day();
   let found = false; //puede dictar secuencia y terminacion de todo el process
@@ -90,7 +90,7 @@ export function isOpen(schdle) {
   return restInfo;
 }
 
-export function getNextOpeningDaySchdle(todayDay){
+module.exports.getNextOpeningDaySchdle = function getNextOpeningDaySchdle(todayDay){
   let day = todayDay + 1;
   do {
     if (schdle[day].act) {
@@ -103,7 +103,7 @@ export function getNextOpeningDaySchdle(todayDay){
   return "Hasta nuevo aviso";
 }
 
-export function getLastOpeningDaySchdle(todayDay){
+module.exports.getLastOpeningDaySchdle = function getLastOpeningDaySchdle(todayDay){
   let day = todayDay - 1;
   do {
     if (schdle[day].act) {
@@ -116,11 +116,11 @@ export function getLastOpeningDaySchdle(todayDay){
   return "Hasta nuevo aviso";
 }
 
-export function formatTime(time) {
+module.exports.getLastOpeningDaySchdle = function formatTime(time) {
   return moment(time, "HH:mm").format("h:mm a");
 }
 
-export function numberToDayString(n) {
+module.exports.numberToDayString = function numberToDayString(n) {
   switch (n) {
     case 0:
       return "Domingo";

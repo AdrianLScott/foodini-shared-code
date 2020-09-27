@@ -11,7 +11,7 @@ function isOpen(schdle) {
   if (schdle[todayIndex].act) {
     const startTime = parseInt(schdle[todayIndex].hrs[0].replace(":", ""));
     const endTime = parseInt(schdle[todayIndex].hrs[1].replace(":", ""));
-    if (startTime <= currentTime && endTime > currentTime) {
+    if (startTime <= currentTime && endTime > currentTime || startTime>endTime && startTime <= currentTime ) {
       found = true;
       const openTIME = formatTime(schdle[todayIndex].hrs[0]); 
       const closeTIME = formatTime(schdle[todayIndex].hrs[1]);
@@ -20,7 +20,6 @@ function isOpen(schdle) {
           numWeekDay: todayIndex,
           weekDay: numberToDayString(todayIndex),
           openTime: openTIME,
-          since: `Abierto desde hoy ${openTIME}`,//abierto desde
           closeTime: closeTIME,
           nextAt: `Cierra a las ${closeTIME}`
         }
@@ -44,7 +43,6 @@ function isOpen(schdle) {
           numWeekDay: yesterdayIndex,
           weekDay: numberToDayString(yesterdayIndex),
           openTime: openTIME,
-          since: `Abierto desde ayer ${openTIME}`,//abierto desde //cerrado desde
           closeTime: closeTIME,
           nextAt: `Cierra a las ${closeTIME}`
         }
@@ -56,63 +54,57 @@ function isOpen(schdle) {
     if (glider) {
       const openTIME = formatTime(schdle[todayIndex].hrs[0]); 
       const closeTIME = formatTime(schdle[todayIndex].hrs[1]);
-      const sinceDay = getLastOpeningDaySchdle(todayIndex)
-      console.log(todayIndex)
         restInfo = {
           open: false,
           numWeekDay: todayIndex,
           weekDay: numberToDayString(todayIndex),
           openTime: openTIME,
-          since: `Cerrado desde ${numberToDayString(sinceDay.day)} ${formatTime(sinceDay.hrs[1])}`,
           closeTime: closeTIME,
           nextAt: `Abre a las ${openTIME}`
         }
     } else {
-      let nextOpenDay = getNextOpeningDaySchdle(todayIndex);
+      let nextOpenDay = getNextOpeningDaySchdle(schdle, todayIndex);
       if(nextOpenDay !== "Hasta nuevo aviso"){
         const openTIME = formatTime(nextOpenDay.hrs[0]); 
         const closeTIME = formatTime(nextOpenDay.hrs[1]);
-        const sinceDay = getLastOpeningDaySchdle(todayIndex)
-        const sinceDayString = numberToDayString(sinceDay.day)
+        const nextOpenDayString = numberToDayString(nextOpenDay.day);
         restInfo = {
           open: false,
           numWeekDay: nextOpenDay.day,
-          weekDay: sinceDayString,
+          weekDay: nextOpenDayString,
           openTime: openTIME,
-          since: `Cerrado desde ${numberToDayString(sinceDay.day)} ${formatTime(sinceDay.hrs[1])}`,
-          closeTime: nextOpenDay.hrs[1],
-          nextAt: `Abre ${sinceDayString} a las ${openTIME}`
+          closeTime: closeTIME,
+          nextAt: `Abre ${nextOpenDayString} a las ${openTIME}`
         }
       }
+      else
+        restInfo = {
+          open: false,
+          numWeekDay: todayIndex,
+          weekDay: numberToDayString(todayIndex),
+          openTime: "Hasta nuevo aviso",
+          since: `No ha tenido disponibilidad`,
+          closeTime: "No abre",
+          nextAt: `Hasta nuevo aviso`
+        }
     }
   }
   
   return restInfo;
-}
 
-function getNextOpeningDaySchdle(todayDay){
+}
+function getNextOpeningDaySchdle(schdle, todayDay){
   let day = todayDay + 1;
+  if(day>6)
+    day = 0;
   do {
     if (schdle[day].act) {
-      return schdle[day]
+      return schdle[day];
     }
     if (day === 6) {
       day = 0;
     } else day++;
   } while (day != todayDay + 1);
-  return "Hasta nuevo aviso";
-}
-
-function getLastOpeningDaySchdle(todayDay){
-  let day = todayDay - 1;
-  do {
-    if (schdle[day].act) {
-      return schdle[day]
-    }
-    if (day === 0) {
-      day = 6;
-    } else day--;
-  } while (day != todayDay - 1);
   return "Hasta nuevo aviso";
 }
 
@@ -139,7 +131,6 @@ function numberToDayString(n) {
   }
 }
 module.exports.isOpen = isOpen;
-module.exports.getNextOpeningDaySchdle = getNextOpeningDaySchdle;
-module.exports.getLastOpeningDaySchdle = getLastOpeningDaySchdle;
-module.exports.getLastOpeningDaySchdle = formatTime;
+module.exports.formatTime = formatTime;
 module.exports.numberToDayString = numberToDayString;
+module.exports.getNextOpeningDaySchdle = getNextOpeningDaySchdle;

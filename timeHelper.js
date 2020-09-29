@@ -1,6 +1,7 @@
 const moment = require("moment"); //RETURN OBJECT AT THE END
 
 function isOpen(schdle) {
+  console.log("HEY IM SCHLDE2____________________-", schdle)
   let restInfo = {};
   let todayIndex = moment().day();
   let found = false; //puede dictar secuencia y terminacion de todo el process

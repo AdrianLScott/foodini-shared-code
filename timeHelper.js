@@ -7,16 +7,16 @@ function isOpen(schdle) {
   let glider = false;
   const currentTime = parseInt(moment().format("HH:mm").replace(":", ""));
 
-  if (schdle[todayIndex].act) {
-    const startTime = parseInt(schdle[todayIndex].hrs[0].replace(":", ""));
-    const endTime = parseInt(schdle[todayIndex].hrs[1].replace(":", ""));
+  if (schdle[todayIndex].active) {
+    const startTime = parseInt(schdle[todayIndex].opentime.replace(":", ""));
+    const endTime = parseInt(schdle[todayIndex].closetime.replace(":", ""));
     if (
       (startTime <= currentTime && endTime > currentTime) ||
       (startTime > endTime && startTime <= currentTime)
     ) {
       found = true;
-      const openTIME = formatTime(schdle[todayIndex].hrs[0]);
-      const closeTIME = formatTime(schdle[todayIndex].hrs[1]);
+      const openTIME = formatTime(schdle[todayIndex].opentime);
+      const closeTIME = formatTime(schdle[todayIndex].closetime);
       restInfo = {
         open: true,
         numWeekDay: todayIndex,
@@ -32,14 +32,14 @@ function isOpen(schdle) {
   }
 
   let yesterdayIndex = todayIndex == 0 ? 6 : todayIndex - 1;
-  if (schdle[yesterdayIndex].act && !found) {
-    const yStart = parseInt(schdle[yesterdayIndex].hrs[0].replace(":", ""));
-    const yEnd = parseInt(schdle[yesterdayIndex].hrs[1].replace(":", ""));
+  if (schdle[yesterdayIndex].active && !found) {
+    const yStart = parseInt(schdle[yesterdayIndex].opentime.replace(":", ""));
+    const yEnd = parseInt(schdle[yesterdayIndex].closetime.replace(":", ""));
     if (yStart >= yEnd) {
       if (currentTime < yEnd) {
         found = true;
-        const openTIME = formatTime(schdle[yesterdayIndex].hrs[0]);
-        const closeTIME = formatTime(schdle[yesterdayIndex].hrs[1]);
+        const openTIME = formatTime(schdle[yesterdayIndex].opentime);
+        const closeTIME = formatTime(schdle[yesterdayIndex].closetime);
         restInfo = {
           open: true,
           numWeekDay: yesterdayIndex,
@@ -54,8 +54,8 @@ function isOpen(schdle) {
 
   if (!found) {
     if (glider) {
-      const openTIME = formatTime(schdle[todayIndex].hrs[0]);
-      const closeTIME = formatTime(schdle[todayIndex].hrs[1]);
+      const openTIME = formatTime(schdle[todayIndex].opentime);
+      const closeTIME = formatTime(schdle[todayIndex].closetime);
       restInfo = {
         open: false,
         numWeekDay: todayIndex,
@@ -67,12 +67,12 @@ function isOpen(schdle) {
     } else {
       let nextOpenDay = getNextOpeningDaySchdle(schdle, todayIndex);
       if (nextOpenDay !== "Hasta nuevo aviso") {
-        const openTIME = formatTime(nextOpenDay.hrs[0]);
-        const closeTIME = formatTime(nextOpenDay.hrs[1]);
-        const nextOpenDayString = numberToDayString(nextOpenDay.day);
+        const openTIME = formatTime(nextOpenDay.opentime);
+        const closeTIME = formatTime(nextOpenDay.closetime);
+        const nextOpenDayString = numberToDayString(nextOpenDay.weekday);
         restInfo = {
           open: false,
-          numWeekDay: nextOpenDay.day,
+          numWeekDay: nextOpenDay.weekday,
           weekDay: nextOpenDayString,
           openTime: openTIME,
           closeTime: closeTIME,
@@ -97,7 +97,7 @@ function getNextOpeningDaySchdle(schdle, todayDay) {
   let day = todayDay + 1;
   if (day > 6) day = 0;
   do {
-    if (schdle[day].act) {
+    if (schdle[day].active) {
       return schdle[day];
     }
     if (day === 6) {

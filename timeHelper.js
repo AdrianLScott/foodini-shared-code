@@ -69,7 +69,13 @@ function isOpen(schdle) {
       if (nextOpenDay !== "Hasta nuevo aviso") {
         const openTIME = formatTime(nextOpenDay.opentime);
         const closeTIME = formatTime(nextOpenDay.closetime);
-        const nextOpenDayString = numberToDayString(nextOpenDay.weekday);
+        const tomorrowDay = moment().add(1,"day").day();
+        let nextOpenDayString = ""
+        if(nextOpenDay.weekday === tomorrowDay){
+          nextOpenDayString = "mañana"
+        }
+        else 
+          nextOpenDayString = numberToDayString(nextOpenDay.weekday);
         restInfo = {
           open: false,
           numWeekDay: nextOpenDay.weekday,

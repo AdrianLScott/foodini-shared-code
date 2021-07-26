@@ -3,7 +3,7 @@
     "moment": "^2.29.0"
   },
   "name": "foodini-shared-code",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "repository": "https://github.com/AdrianLScott/foodini-shared-code.git",
   "author": "MannySAD <villager97@outlook.es>",
